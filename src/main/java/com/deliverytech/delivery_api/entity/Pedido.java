@@ -3,8 +3,6 @@ package com.deliverytech.delivery_api.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.deliverytech.delivery_api.enums.StatusPedido;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

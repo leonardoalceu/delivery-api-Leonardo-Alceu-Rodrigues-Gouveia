@@ -1,6 +1,5 @@
 package com.deliverytech.delivery_api.controller;
 import java.util.List;
-import java.util.Optional;
 
 import com.deliverytech.delivery_api.entity.PedidoDTO;
 import org.springframework.beans.factory.annotation.Autowired;

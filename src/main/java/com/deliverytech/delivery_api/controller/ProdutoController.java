@@ -6,10 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.deliverytech.delivery_api.entity.Produto;
-import com.deliverytech.delivery_api.entity.Restaurante;
 import com.deliverytech.delivery_api.services.ProdutoService;
-
-import java.math.BigDecimal;
 
 
 @RestController

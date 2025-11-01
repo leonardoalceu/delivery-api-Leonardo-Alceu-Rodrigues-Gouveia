@@ -1,8 +1,12 @@
 package com.deliverytech.delivery_api.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.deliverytech.delivery_api.dto.ClienteResponseDTO;
+import com.deliverytech.delivery_api.dto.ClienteResquetDTO;
+import com.deliverytech.delivery_api.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,19 +24,23 @@ public class ClienteService {
     /**
      * Cadastrar novo cliente
      */
-    public Cliente cadastrar(Cliente cliente) {
+    public ClienteResponseDTO cadastrar(ClienteResquetDTO dto) {
         // Validar email único
-        if (clienteRepository.existsByEmail(cliente.getEmail())) {
-            throw new IllegalArgumentException("Email já cadastrado: " + cliente.getEmail());
+        if (clienteRepository.existsByEmail(dto.getEmail())) {
+            throw new BusinessException("Email já cadastrado: " + dto.getEmail());
         }
 
-        // Validações de negócio
-        validarDadosCliente(cliente);
-
+        Cliente cliente = new Cliente();
+        cliente.setNome(dto.getNome());
+        cliente.setEmail(dto.getEmail());
+        cliente.setTelefone(dto.getTelefone());
+        cliente.setEndereco(dto.getEndereco());
         // Definir como ativo por padrão
         cliente.setAtivo(true);
+        cliente.setDataCadastro(LocalDateTime.now());
 
-        return clienteRepository.save(cliente);
+
+        return new ClienteResponseDTO(clienteRepository.save(cliente));
     }
 
     /**
@@ -103,18 +111,18 @@ public class ClienteService {
     /**
      * Validações de negócio
      */
-    private void validarDadosCliente(Cliente cliente) {
-        if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome é obrigatório");
-        }
-
-        if (cliente.getEmail() == null || cliente.getEmail().trim().isEmpty()) {
-            throw new IllegalArgumentException("Email é obrigatório");
-        }
-
-        if (cliente.getNome().length() < 2) {
-            throw new IllegalArgumentException("Nome deve ter pelo menos 2 caracteres");
-        }
-    }
+//    private void validarDadosCliente(ClienteResquetDTO cliente) {
+//        if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()) {
+//            throw new IllegalArgumentException("Nome é obrigatório");
+//        }
+//
+//        if (cliente.getEmail() == null || cliente.getEmail().trim().isEmpty()) {
+//            throw new IllegalArgumentException("Email é obrigatório");
+//        }
+//
+//        if (cliente.getNome().length() < 2) {
+//            throw new IllegalArgumentException("Nome deve ter pelo menos 2 caracteres");
+//        }
+//    }
     
 }

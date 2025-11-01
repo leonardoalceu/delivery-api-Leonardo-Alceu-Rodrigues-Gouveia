@@ -3,6 +3,9 @@ package com.deliverytech.delivery_api.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.deliverytech.delivery_api.dto.ClienteResponseDTO;
+import com.deliverytech.delivery_api.dto.ClienteResquetDTO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +36,9 @@ public class ClienteController {
      * Cadastrar novo cliente
      */
     @PostMapping
-    public ResponseEntity<?> cadastrar(@Validated @RequestBody Cliente cliente) {
+    public ResponseEntity<?> cadastrar(@Valid @RequestBody ClienteResquetDTO cliente) {
         try {
-            Cliente clienteSalvo = clienteService.cadastrar(cliente);
+            ClienteResponseDTO clienteSalvo = clienteService.cadastrar(cliente);
             return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erro: " + e.getMessage());

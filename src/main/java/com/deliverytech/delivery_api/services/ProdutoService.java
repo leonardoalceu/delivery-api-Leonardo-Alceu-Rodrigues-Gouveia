@@ -1,4 +1,5 @@
 package com.deliverytech.delivery_api.services;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.deliverytech.delivery_api.entity.Produto;
 import com.deliverytech.delivery_api.entity.ProdutoDTO;
+import com.deliverytech.delivery_api.entity.Restaurante;
 import com.deliverytech.delivery_api.repository.ProdutoRepository;
 import com.deliverytech.delivery_api.repository.RestauranteRepository;
 
@@ -24,13 +26,22 @@ public class ProdutoService {
     /**
      * Cadastrar novo produto
      */
+    @Transactional
     public Produto cadastrar(Produto produto) {
+        // Verifica se o restaurante existe antes de salvar
+        Long restauranteId = produto.getRestaurante().getId();
 
-        produto.setRestauranteId(produto.getRestauranteId());
-        produto.setDisponivel(produto.getDisponivel());
+        Restaurante restaurante = restauranteRepository.findById(restauranteId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurante não encontrado: " + restauranteId));
+
+        validarDadosProduto(produto);
+
+        produto.setRestaurante(restaurante);
+        produto.setDisponivel(true); // Produto novo sempre disponível
 
         return produtoRepository.save(produto);
     }
+
     /**
      * Listar todos os produtos
      */
@@ -39,13 +50,20 @@ public class ProdutoService {
         List<ProdutoDTO> produtosDTO = new ArrayList<>();
 
         for (Produto produto : produtos) {
-            ProdutoDTO dto = new ProdutoDTO(produto.getId(), produto.getNome(), produto.getDescricao(),
-                    produto.getPreco(), produto.getCategoria(), produto.getDisponivel());
+            ProdutoDTO dto = new ProdutoDTO(
+                produto.getId(),
+                produto.getNome(),
+                produto.getDescricao(),
+                produto.getPreco(),
+                produto.getCategoria(),
+                produto.getDisponivel()
+            );
             produtosDTO.add(dto);
         }
 
         return produtosDTO;
     }
+
     /**
      * Buscar produto por ID
      */
@@ -53,6 +71,7 @@ public class ProdutoService {
         return produtoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
     }
+
     /**
      * Atualizar produto
      */
@@ -71,6 +90,7 @@ public class ProdutoService {
 
         return produtoRepository.save(produtoExistente);
     }
+
     /**
      * Excluir produto
      */
@@ -82,6 +102,32 @@ public class ProdutoService {
         produtoRepository.delete(produto);
     }
 
+    /**
+     * Inativar produto
+     */
+    @Transactional
+    public Produto inativar(Long id) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
+
+        if (!produto.getDisponivel()) {
+            throw new IllegalArgumentException("Produto já está inativo: " + id);
+        }
+
+        produto.setDisponivel(false);
+        return produtoRepository.save(produto);
+    }
+
+    /**
+     * Buscar produtos por restaurante
+     */
+    public List<Produto> buscarPorRestaurante(Long restauranteId) {
+        return produtoRepository.findByRestauranteId(restauranteId);
+    }
+
+    /**
+     * Validação de campos obrigatórios
+     */
     private void validarDadosProduto(Produto produto) {
         if (produto.getNome() == null || produto.getNome().isEmpty()) {
             throw new IllegalArgumentException("Nome do produto é obrigatório");
@@ -95,21 +141,5 @@ public class ProdutoService {
         if (produto.getCategoria() == null || produto.getCategoria().isEmpty()) {
             throw new IllegalArgumentException("Categoria do produto é obrigatória");
         }
-    }
-    // buscar produtos por restaurante
-    public List<Produto> buscarPorRestaurante(Long restauranteId) {
-        return produtoRepository.findByRestauranteId(restauranteId);
-    }
-
-    public Produto inativar(Long id) {
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado: " + id));
-
-        if (!produto.getDisponivel()) {
-            throw new IllegalArgumentException("Produto já está inativo: " + id);
-        }
-
-        produto.setDisponivel(false);
-        return produtoRepository.save(produto);
     }
 }

@@ -1,11 +1,11 @@
 package com.deliverytech.delivery_api.entity;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -22,3 +22,4 @@ public class PedidoDTO {
     private String itens; // JSON ou string representando os itens do pedido
 
 }
+//PedidoDTO.java dentro da pasta entity

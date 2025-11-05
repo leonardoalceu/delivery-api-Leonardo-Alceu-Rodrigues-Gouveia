@@ -17,4 +17,4 @@ public class ProdutoDTO {
     private String categoria;
     private Boolean disponivel;
 
-}
+}//ProdutoDTO.java dentro da pasta entity

@@ -3,7 +3,14 @@ package com.deliverytech.delivery_api.entity;
 import java.math.BigDecimal;
 import java.util.List;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,19 +27,22 @@ public class Restaurante {
     private Long id;
 
     private String nome;
-
     private String categoria;
-
     private String endereco;
-
     private String telefone;
 
     @Column(name = "taxa_entrega")
     private BigDecimal taxaEntrega;
 
     private BigDecimal avaliacao;
-
     private Boolean ativo;
+
+    // Relacionamentos
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    private List<Produto> produtos;
+
+    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
+    private List<Pedido> pedidos;
 
     public void inativar() {
         this.ativo = false;

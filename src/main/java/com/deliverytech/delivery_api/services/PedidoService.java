@@ -2,15 +2,15 @@ package com.deliverytech.delivery_api.services;
 
 import java.util.List;
 
-import com.deliverytech.delivery_api.entity.PedidoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.deliverytech.delivery_api.entity.Cliente;
 import com.deliverytech.delivery_api.entity.Pedido;
+import com.deliverytech.delivery_api.entity.PedidoDTO;
 import com.deliverytech.delivery_api.entity.Restaurante;
-import com.deliverytech.delivery_api.enums.StatusPedido;
+import com.deliverytech.delivery_api.entity.StatusPedido; // ✅ import correto
 import com.deliverytech.delivery_api.repository.ClienteRepository;
 import com.deliverytech.delivery_api.repository.PedidoRepository;
 import com.deliverytech.delivery_api.repository.ProdutoRepository;
@@ -50,9 +50,9 @@ public class PedidoService {
         }
 
         Pedido pedido = new Pedido();
-        pedido.setClienteId(cliente.getId());
+        pedido.setCliente(cliente); // ✅ o Pedido possui o objeto Cliente, não clienteId
         pedido.setRestaurante(restaurante);
-        pedido.setStatus(StatusPedido.PENDENTE.name());
+        pedido.setStatus(StatusPedido.PENDENTE); // ✅ agora o tipo é enum, não String
         pedido.setDataPedido(dto.getDataPedido());
         pedido.setNumeroPedido(dto.getNumeroPedido());
         pedido.setValorTotal(dto.getValorTotal());
@@ -77,12 +77,11 @@ public class PedidoService {
         Pedido pedido = pedidoRepository.findById(pedidoId)
             .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado: " + pedidoId));
 
-        if (pedido.getStatus().equals(StatusPedido.ENTREGUE.name())) {
+        if (pedido.getStatus() == StatusPedido.ENTREGUE) {
             throw new IllegalArgumentException("Pedido já finalizado: " + pedidoId);
         }
 
-        pedido.setStatus(status.name());
+        pedido.setStatus(status);
         return pedidoRepository.save(pedido);
     }
-    
 }

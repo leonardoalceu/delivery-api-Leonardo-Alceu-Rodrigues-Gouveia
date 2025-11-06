@@ -30,8 +30,19 @@ public class Produto {
     private String categoria;
     private Boolean disponivel;
 
-    // Relacionamento com restaurante
     @ManyToOne
     @JoinColumn(name = "restaurante_id")
     private Restaurante restaurante;
+
+    // 🔹 Construtor personalizado usado pelo DataLoader
+    public Produto(String nome, String descricao, BigDecimal preco, Boolean disponivel, String categoria, Restaurante restaurante) {
+        this.nome = nome;
+        this.descricao = descricao;
+        this.preco = preco;
+        this.disponivel = disponivel;
+        this.categoria = categoria;
+        this.restaurante = restaurante;
+    }
 }
+
+//Produto.java dentro de entity

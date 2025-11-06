@@ -48,8 +48,15 @@ public class Cliente {
         this.ativo = ativo;
         this.dataCadastro = LocalDateTime.now();
     }
+    public Cliente(String nome, String email, Boolean ativo) {
+    this.nome = nome;
+    this.email = email;
+    this.ativo = ativo;
+    this.dataCadastro = LocalDateTime.now();
+}
 
     public void inativar() {
         this.ativo = false;
     }
 }
+//Cliente.java dentro de entity

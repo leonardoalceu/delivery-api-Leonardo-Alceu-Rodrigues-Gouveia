@@ -1,10 +1,10 @@
-package com.deliverytech.delivery_api.entity;
+package com.deliverytech.delivery_api.dto;
+
+import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
+import lombok.NoArgsConstructor; // ← importar BigDecimal
 
 @Data
 @AllArgsConstructor
@@ -16,8 +16,8 @@ public class RestauranteDTO {
     private String categoria;
     private String endereco;
     private String telefone;
-    private BigDecimal taxaEntrega;
-    private BigDecimal avaliacao;
+    private BigDecimal taxaEntrega;  // mesmo tipo da entidade
+    private Double avaliacao;        // mesmo tipo da entidade
     private Boolean ativo;
 
 }

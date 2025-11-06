@@ -24,3 +24,4 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     // Buscar pedidos por período
     List<Pedido> findByDataPedidoBetween(LocalDateTime inicio, LocalDateTime fim);
 }
+//PedidoRepository.java dentro de repository

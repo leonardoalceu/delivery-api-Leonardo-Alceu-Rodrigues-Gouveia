@@ -25,4 +25,4 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
 }
 
-// ProdutoRepository.java dentro de repository
+

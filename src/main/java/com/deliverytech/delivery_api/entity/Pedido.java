@@ -3,7 +3,16 @@ package com.deliverytech.delivery_api.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +28,7 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "numero_pedido")
-    private String numeroPedido;
+    private String codigo;
 
     @Column(name = "data_pedido")
     private LocalDateTime dataPedido;
@@ -28,20 +36,22 @@ public class Pedido {
     @Enumerated(EnumType.STRING)
     private StatusPedido status;
 
-    @Column(name = "valor_total")
-    private BigDecimal valorTotal;
+    private BigDecimal total;
+    private String enderecoEntrega;
+    private String formaPagamento;
 
-    private String observacoes;
-
-    private String itens;
-
-    // Relacionamento com Cliente
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    // Relacionamento com Restaurante
     @ManyToOne
     @JoinColumn(name = "restaurante_id")
     private Restaurante restaurante;
+
+    // 🔹 Construtor personalizado usado pelo DataLoader
+    public Pedido(Cliente cliente, LocalDateTime dataPedido, StatusPedido status) {
+        this.cliente = cliente;
+        this.dataPedido = dataPedido;
+        this.status = status;
+    }
 }

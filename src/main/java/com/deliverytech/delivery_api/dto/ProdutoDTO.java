@@ -1,4 +1,4 @@
-package com.deliverytech.delivery_api.entity;
+package com.deliverytech.delivery_api.dto;
 
 import java.math.BigDecimal;
 
@@ -17,4 +17,4 @@ public class ProdutoDTO {
     private String categoria;
     private Boolean disponivel;
 
-}//ProdutoDTO.java dentro da pasta entity
+}

@@ -2,62 +2,41 @@ package com.deliverytech.delivery_api.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.deliverytech.delivery_api.entity.Cliente;
+import com.deliverytech.delivery_api.dto.PedidoDTO;
 import com.deliverytech.delivery_api.entity.Pedido;
-import com.deliverytech.delivery_api.entity.PedidoDTO;
-import com.deliverytech.delivery_api.entity.Restaurante;
-import com.deliverytech.delivery_api.entity.StatusPedido; // ✅ import correto
-import com.deliverytech.delivery_api.repository.ClienteRepository;
+import com.deliverytech.delivery_api.entity.StatusPedido;
 import com.deliverytech.delivery_api.repository.PedidoRepository;
-import com.deliverytech.delivery_api.repository.ProdutoRepository;
-import com.deliverytech.delivery_api.repository.RestauranteRepository;
 
 @Service
+@Transactional
 public class PedidoService {
-    
-    @Autowired
-    private PedidoRepository pedidoRepository;
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private final PedidoRepository pedidoRepository;
 
-    @Autowired
-    private RestauranteRepository restauranteRepository;
-
-    @Autowired
-    private ProdutoRepository produtoRepository;
+    public PedidoService(PedidoRepository pedidoRepository) {
+        this.pedidoRepository = pedidoRepository;
+    }
 
     /**
      * Criar novo pedido
      */
     public Pedido criarPedido(PedidoDTO dto) {
-        Cliente cliente = clienteRepository.findById(dto.getClienteId())
-            .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + dto.getClienteId()));
-
-        Restaurante restaurante = restauranteRepository.findById(dto.getRestauranteId())
-            .orElseThrow(() -> new IllegalArgumentException("Restaurante não encontrado: " + dto.getRestauranteId()));
-
-        if (!cliente.getAtivo()) {
-            throw new IllegalArgumentException("Cliente inativo não pode fazer pedidos");
-        }
-
-        if (!restaurante.getAtivo()) {
-            throw new IllegalArgumentException("Restaurante não está disponível");
-        }
-
         Pedido pedido = new Pedido();
-        pedido.setCliente(cliente); // ✅ o Pedido possui o objeto Cliente, não clienteId
-        pedido.setRestaurante(restaurante);
-        pedido.setStatus(StatusPedido.PENDENTE); // ✅ agora o tipo é enum, não String
-        pedido.setDataPedido(dto.getDataPedido());
-        pedido.setNumeroPedido(dto.getNumeroPedido());
-        pedido.setValorTotal(dto.getValorTotal());
-        pedido.setObservacoes(dto.getObservacoes());
-        pedido.setItens(dto.getItens());
+
+        pedido.setCodigo(dto.getNumeroPedido());
+        pedido.setDataPedido(dto.getDataPedido() != null ? dto.getDataPedido() : java.time.LocalDateTime.now());
+        pedido.setStatus(StatusPedido.PENDENTE);  // status inicial
+        pedido.setTotal(dto.getValorTotal());
+        pedido.setEnderecoEntrega(dto.getEnderecoEntrega());
+        pedido.setFormaPagamento(dto.getFormaPagamento());
+
+        // Aqui você precisará setar Cliente e Restaurante usando IDs (busca no DB)
+        // Exemplo:
+        // pedido.setCliente(clienteRepository.findById(dto.getClienteId()).orElseThrow(...));
+        // pedido.setRestaurante(restauranteRepository.findById(dto.getRestauranteId()).orElseThrow(...));
 
         return pedidoRepository.save(pedido);
     }
@@ -75,13 +54,10 @@ public class PedidoService {
      */
     public Pedido atualizarStatus(Long pedidoId, StatusPedido status) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
-            .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado: " + pedidoId));
-
-        if (pedido.getStatus() == StatusPedido.ENTREGUE) {
-            throw new IllegalArgumentException("Pedido já finalizado: " + pedidoId);
-        }
-
+            .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
         pedido.setStatus(status);
         return pedidoRepository.save(pedido);
     }
 }
+
+

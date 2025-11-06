@@ -4,21 +4,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import com.deliverytech.delivery_api.dto.ClienteResponseDTO;
-import com.deliverytech.delivery_api.dto.ClienteResquetDTO;
-import com.deliverytech.delivery_api.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deliverytech.delivery_api.dto.ClienteResponseDTO;
+import com.deliverytech.delivery_api.dto.ClienteResquetDTO;
 import com.deliverytech.delivery_api.entity.Cliente;
+import com.deliverytech.delivery_api.exceptions.BusinessException;
 import com.deliverytech.delivery_api.repository.ClienteRepository;
 
 @Service
 @Transactional
 public class ClienteService {
 
-     @Autowired
+    @Autowired
     private ClienteRepository clienteRepository;
 
     /**
@@ -39,8 +39,8 @@ public class ClienteService {
         cliente.setAtivo(true);
         cliente.setDataCadastro(LocalDateTime.now());
 
-
-        return new ClienteResponseDTO(clienteRepository.save(cliente));
+        Cliente salvo = clienteRepository.save(cliente);
+        return new ClienteResponseDTO(salvo);
     }
 
     /**
@@ -70,21 +70,21 @@ public class ClienteService {
     /**
      * Atualizar dados do cliente
      */
-    public Cliente atualizar(Long id, Cliente clienteAtualizado) {
+    public Cliente atualizar(Long id, ClienteResquetDTO dto) {
         Cliente cliente = buscarPorId(id)
             .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
 
         // Verificar se email não está sendo usado por outro cliente
-        if (!cliente.getEmail().equals(clienteAtualizado.getEmail()) &&
-            clienteRepository.existsByEmail(clienteAtualizado.getEmail())) {
-            throw new IllegalArgumentException("Email já cadastrado: " + clienteAtualizado.getEmail());
+        if (!cliente.getEmail().equals(dto.getEmail()) &&
+            clienteRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("Email já cadastrado: " + dto.getEmail());
         }
 
         // Atualizar campos
-        cliente.setNome(clienteAtualizado.getNome());
-        cliente.setEmail(clienteAtualizado.getEmail());
-        cliente.setTelefone(clienteAtualizado.getTelefone());
-        cliente.setEndereco(clienteAtualizado.getEndereco());
+        cliente.setNome(dto.getNome());
+        cliente.setEmail(dto.getEmail());
+        cliente.setTelefone(dto.getTelefone());
+        cliente.setEndereco(dto.getEndereco());
 
         return clienteRepository.save(cliente);
     }
@@ -107,22 +107,7 @@ public class ClienteService {
     public List<Cliente> buscarPorNome(String nome) {
         return clienteRepository.findByNomeContainingIgnoreCase(nome);
     }
-
-    /**
-     * Validações de negócio
-     */
-//    private void validarDadosCliente(ClienteResquetDTO cliente) {
-//        if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()) {
-//            throw new IllegalArgumentException("Nome é obrigatório");
-//        }
-//
-//        if (cliente.getEmail() == null || cliente.getEmail().trim().isEmpty()) {
-//            throw new IllegalArgumentException("Email é obrigatório");
-//        }
-//
-//        if (cliente.getNome().length() < 2) {
-//            throw new IllegalArgumentException("Nome deve ter pelo menos 2 caracteres");
-//        }
-//    }
-    
 }
+
+
+//ClienteService.java dentro de services

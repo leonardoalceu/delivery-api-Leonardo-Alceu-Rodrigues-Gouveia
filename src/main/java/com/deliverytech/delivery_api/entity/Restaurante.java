@@ -28,23 +28,30 @@ public class Restaurante {
 
     private String nome;
     private String categoria;
-    private String endereco;
-    private String telefone;
 
     @Column(name = "taxa_entrega")
     private BigDecimal taxaEntrega;
 
-    private BigDecimal avaliacao;
     private Boolean ativo;
 
-    // Relacionamentos
+    // Campos necessários para o serviço
+    private String endereco;
+    private String telefone;
+    private Double avaliacao;
+
+    // Relacionamento com produtos
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
     private List<Produto> produtos;
 
-    @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
-    private List<Pedido> pedidos;
-
-    public void inativar() {
-        this.ativo = false;
+    // 🔹 Construtor personalizado usado pelo DataLoader
+    public Restaurante(String nome, String categoria, BigDecimal taxaEntrega, Boolean ativo,
+                       String endereco, String telefone, Double avaliacao) {
+        this.nome = nome;
+        this.categoria = categoria;
+        this.taxaEntrega = taxaEntrega;
+        this.ativo = ativo;
+        this.endereco = endereco;
+        this.telefone = telefone;
+        this.avaliacao = avaliacao;
     }
 }

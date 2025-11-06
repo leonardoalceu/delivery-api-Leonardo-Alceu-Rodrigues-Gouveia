@@ -24,4 +24,3 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     List<Cliente> findByNomeContainingIgnoreCase(String nome);
 
 }
-//arquivo ClienteRepository dentro da pasta repository

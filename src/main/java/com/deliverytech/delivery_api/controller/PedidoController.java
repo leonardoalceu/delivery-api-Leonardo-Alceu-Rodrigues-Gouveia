@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity; // ✅ CORRIGIDO
+import org.springframework.http.ResponseEntity; 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deliverytech.delivery_api.dto.PedidoDTO;
 import com.deliverytech.delivery_api.entity.Pedido;
-import com.deliverytech.delivery_api.entity.PedidoDTO;
 import com.deliverytech.delivery_api.entity.StatusPedido;
-import com.deliverytech.delivery_api.services.PedidoService;
+import com.deliverytech.delivery_api.services.PedidoService; 
 
 @RestController
 @RequestMapping("/pedidos")
@@ -67,3 +67,6 @@ public class PedidoController {
         }
     }
 }
+
+
+

@@ -2,6 +2,7 @@ package com.deliverytech.delivery_api.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +29,9 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "numero_pedido", nullable = false, unique = true)
+    private String numeroPedido;
 
     private String codigo;
 
@@ -48,10 +53,30 @@ public class Pedido {
     @JoinColumn(name = "restaurante_id")
     private Restaurante restaurante;
 
-    // 🔹 Construtor personalizado usado pelo DataLoader
+    // 🔹 Gera automaticamente o número do pedido antes de salvar no banco
+    @PrePersist
+    public void gerarNumeroPedido() {
+        if (this.numeroPedido == null || this.numeroPedido.isEmpty()) {
+            this.numeroPedido = "PED-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        }
+        if (this.dataPedido == null) {
+            this.dataPedido = LocalDateTime.now();
+        }
+    }
+
+    // Construtor usado em algumas partes da aplicação
     public Pedido(Cliente cliente, LocalDateTime dataPedido, StatusPedido status) {
         this.cliente = cliente;
         this.dataPedido = dataPedido;
         this.status = status;
+    }
+
+    // Construtor usado no DataLoader
+    public Pedido(LocalDateTime dataPedido, StatusPedido status, BigDecimal total, Cliente cliente, Restaurante restaurante) {
+        this.dataPedido = dataPedido;
+        this.status = status;
+        this.total = total;
+        this.cliente = cliente;
+        this.restaurante = restaurante;
     }
 }

@@ -2,6 +2,7 @@ package com.deliverytech.delivery_api.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,16 +27,14 @@ import com.deliverytech.delivery_api.services.ClienteService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/api/clientes") // 🔹 agora todas as rotas terão o prefixo /api
 @CrossOrigin(origins = "*")
 public class ClienteController {
-    
+
     @Autowired
     private ClienteService clienteService;
 
-    /**
-     * Cadastrar novo cliente
-     */
+    // 🟢 Cadastrar novo cliente
     @PostMapping
     public ResponseEntity<?> cadastrar(@Valid @RequestBody ClienteResquetDTO cliente) {
         try {
@@ -45,49 +44,45 @@ public class ClienteController {
             return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Erro interno do servidor");
+                    .body("Erro interno do servidor");
         }
     }
 
-    /**
-     * Listar todos os clientes ativos
-     */
+    // 🟢 Listar todos os clientes ativos
     @GetMapping
-    public ResponseEntity<List<Cliente>> listar() {
+    public ResponseEntity<List<ClienteResponseDTO>> listar() {
         List<Cliente> clientes = clienteService.listarAtivos();
-        return ResponseEntity.ok(clientes);
+        List<ClienteResponseDTO> clientesDTO = clientes.stream()
+                .map(ClienteResponseDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(clientesDTO);
     }
 
-    /**
-     * Buscar cliente por ID
-     */
+    // 🟢 Buscar cliente por ID
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
-        Optional<Cliente> cliente = clienteService.buscarPorId(id);
-        return cliente.map(ResponseEntity::ok)
-                      .orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Cliente> clienteOpt = clienteService.buscarPorId(id);
+        return clienteOpt
+                .map(cliente -> ResponseEntity.ok(new ClienteResponseDTO(cliente)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    /**
-     * Atualizar cliente usando DTO
-     */
+    // 🟢 Atualizar cliente
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizar(@PathVariable Long id,
                                        @Validated @RequestBody ClienteResquetDTO dto) {
         try {
             Cliente clienteAtualizado = clienteService.atualizar(id, dto);
-            return ResponseEntity.ok(clienteAtualizado);
+            return ResponseEntity.ok(new ClienteResponseDTO(clienteAtualizado));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Erro interno do servidor");
+                    .body("Erro interno do servidor");
         }
     }
 
-    /**
-     * Inativar cliente (soft delete)
-     */
+    // 🟢 Inativar cliente (soft delete)
     @DeleteMapping("/{id}")
     public ResponseEntity<?> inativar(@PathVariable Long id) {
         try {
@@ -97,26 +92,26 @@ public class ClienteController {
             return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Erro interno do servidor");
+                    .body("Erro interno do servidor");
         }
     }
 
-    /**
-     * Buscar clientes por nome
-     */
+    // 🟢 Buscar clientes por nome
     @GetMapping("/buscar")
-    public ResponseEntity<List<Cliente>> buscarPorNome(@RequestParam String nome) {
+    public ResponseEntity<List<ClienteResponseDTO>> buscarPorNome(@RequestParam String nome) {
         List<Cliente> clientes = clienteService.buscarPorNome(nome);
-        return ResponseEntity.ok(clientes);
+        List<ClienteResponseDTO> clientesDTO = clientes.stream()
+                .map(ClienteResponseDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(clientesDTO);
     }
 
-    /**
-     * Buscar cliente por email
-     */
+    // 🟢 Buscar cliente por email
     @GetMapping("/email/{email}")
     public ResponseEntity<?> buscarPorEmail(@PathVariable String email) {
-        Optional<Cliente> cliente = clienteService.buscarPorEmail(email);
-        return cliente.map(ResponseEntity::ok)
-                      .orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Cliente> clienteOpt = clienteService.buscarPorEmail(email);
+        return clienteOpt
+                .map(cliente -> ResponseEntity.ok(new ClienteResponseDTO(cliente)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

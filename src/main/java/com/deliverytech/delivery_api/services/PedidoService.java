@@ -8,16 +8,24 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deliverytech.delivery_api.dto.PedidoDTO;
 import com.deliverytech.delivery_api.entity.Pedido;
 import com.deliverytech.delivery_api.entity.StatusPedido;
+import com.deliverytech.delivery_api.repository.ClienteRepository;
 import com.deliverytech.delivery_api.repository.PedidoRepository;
+import com.deliverytech.delivery_api.repository.RestauranteRepository;
 
 @Service
 @Transactional
 public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
+    private final ClienteRepository clienteRepository;
+    private final RestauranteRepository restauranteRepository;
 
-    public PedidoService(PedidoRepository pedidoRepository) {
+    public PedidoService(PedidoRepository pedidoRepository,
+                         ClienteRepository clienteRepository,
+                         RestauranteRepository restauranteRepository) {
         this.pedidoRepository = pedidoRepository;
+        this.clienteRepository = clienteRepository;
+        this.restauranteRepository = restauranteRepository;
     }
 
     /**
@@ -28,15 +36,20 @@ public class PedidoService {
 
         pedido.setCodigo(dto.getNumeroPedido());
         pedido.setDataPedido(dto.getDataPedido() != null ? dto.getDataPedido() : java.time.LocalDateTime.now());
-        pedido.setStatus(StatusPedido.PENDENTE);  // status inicial
+        pedido.setStatus(StatusPedido.PENDENTE);
         pedido.setTotal(dto.getValorTotal());
         pedido.setEnderecoEntrega(dto.getEnderecoEntrega());
         pedido.setFormaPagamento(dto.getFormaPagamento());
 
-        // Aqui você precisará setar Cliente e Restaurante usando IDs (busca no DB)
-        // Exemplo:
-        // pedido.setCliente(clienteRepository.findById(dto.getClienteId()).orElseThrow(...));
-        // pedido.setRestaurante(restauranteRepository.findById(dto.getRestauranteId()).orElseThrow(...));
+        // Buscar Cliente pelo ID
+        pedido.setCliente(clienteRepository
+                .findById(dto.getClienteId())
+                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado")));
+
+        // Buscar Restaurante pelo ID
+        pedido.setRestaurante(restauranteRepository
+                .findById(dto.getRestauranteId())
+                .orElseThrow(() -> new IllegalArgumentException("Restaurante não encontrado")));
 
         return pedidoRepository.save(pedido);
     }
@@ -54,10 +67,8 @@ public class PedidoService {
      */
     public Pedido atualizarStatus(Long pedidoId, StatusPedido status) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
-            .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
         pedido.setStatus(status);
         return pedidoRepository.save(pedido);
     }
 }
-
-

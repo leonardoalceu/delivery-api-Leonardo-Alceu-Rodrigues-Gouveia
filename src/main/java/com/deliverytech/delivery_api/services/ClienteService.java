@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,14 +17,15 @@ import com.deliverytech.delivery_api.repository.ClienteRepository;
 @Transactional
 public class ClienteService {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
 
-    /**
-     * Cadastrar novo cliente
-     */
+    // Usando injeção por construtor (mais recomendado que @Autowired em campos)
+    public ClienteService(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
+    }
+
+    /** Cadastrar novo cliente */
     public ClienteResponseDTO cadastrar(ClienteResquetDTO dto) {
-        // Validar email único
         if (clienteRepository.existsByEmail(dto.getEmail())) {
             throw new BusinessException("Email já cadastrado: " + dto.getEmail());
         }
@@ -35,7 +35,6 @@ public class ClienteService {
         cliente.setEmail(dto.getEmail());
         cliente.setTelefone(dto.getTelefone());
         cliente.setEndereco(dto.getEndereco());
-        // Definir como ativo por padrão
         cliente.setAtivo(true);
         cliente.setDataCadastro(LocalDateTime.now());
 
@@ -43,44 +42,33 @@ public class ClienteService {
         return new ClienteResponseDTO(salvo);
     }
 
-    /**
-     * Buscar cliente por ID
-     */
+    /** Buscar cliente por ID */
     @Transactional(readOnly = true)
     public Optional<Cliente> buscarPorId(Long id) {
         return clienteRepository.findById(id);
     }
 
-    /**
-     * Buscar cliente por email
-     */
+    /** Buscar cliente por email */
     @Transactional(readOnly = true)
     public Optional<Cliente> buscarPorEmail(String email) {
         return clienteRepository.findByEmail(email);
     }
 
-    /**
-     * Listar todos os clientes ativos
-     */
+    /** Listar todos os clientes ativos */
     @Transactional(readOnly = true)
     public List<Cliente> listarAtivos() {
         return clienteRepository.findByAtivoTrue();
     }
 
-    /**
-     * Atualizar dados do cliente
-     */
+    /** Atualizar cliente */
     public Cliente atualizar(Long id, ClienteResquetDTO dto) {
         Cliente cliente = buscarPorId(id)
-            .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
 
-        // Verificar se email não está sendo usado por outro cliente
-        if (!cliente.getEmail().equals(dto.getEmail()) &&
-            clienteRepository.existsByEmail(dto.getEmail())) {
+        if (!cliente.getEmail().equals(dto.getEmail()) && clienteRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("Email já cadastrado: " + dto.getEmail());
         }
 
-        // Atualizar campos
         cliente.setNome(dto.getNome());
         cliente.setEmail(dto.getEmail());
         cliente.setTelefone(dto.getTelefone());
@@ -89,25 +77,17 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    /**
-     * Inativar cliente (soft delete)
-     */
+    /** Inativar cliente (soft delete) */
     public void inativar(Long id) {
         Cliente cliente = buscarPorId(id)
-            .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
-
-        cliente.inativar();
+                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
+        cliente.setAtivo(false); // assumindo que Cliente tem setAtivo
         clienteRepository.save(cliente);
     }
 
-    /**
-     * Buscar clientes por nome
-     */
+    /** Buscar clientes por nome */
     @Transactional(readOnly = true)
     public List<Cliente> buscarPorNome(String nome) {
         return clienteRepository.findByNomeContainingIgnoreCase(nome);
     }
 }
-
-
-//ClienteService.java dentro de services

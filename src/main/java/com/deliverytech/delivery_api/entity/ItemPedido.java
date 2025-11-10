@@ -45,3 +45,4 @@ public class ItemPedido {
     }
 }
 
+//ItemPedido.java dentro de entity ja existe

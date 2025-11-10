@@ -27,7 +27,11 @@ public class Cliente {
     private Long id;
 
     private String nome;
+
+    // 🔹 Email único e obrigatório
+    @Column(nullable = false, unique = true)
     private String email;
+
     private String telefone;
     private String endereco;
 
@@ -37,26 +41,36 @@ public class Cliente {
     @Column(nullable = true)
     private Boolean ativo;
 
-    // Relacionamento com pedidos
+    // 🔹 Relacionamento com pedidos
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Pedido> pedidos;
 
-    // ✅ Construtor adicional usado no DataLoader
+    // ✅ Construtor usado no DataLoader (nome, email, telefone, ativo)
+    public Cliente(String nome, String email, String telefone, Boolean ativo) {
+        this.nome = nome;
+        this.email = email;
+        this.telefone = telefone;
+        this.ativo = ativo;
+        this.dataCadastro = LocalDateTime.now();
+    }
+
+    // ✅ Outros construtores úteis
     public Cliente(String nome, String email, boolean ativo) {
         this.nome = nome;
         this.email = email;
         this.ativo = ativo;
         this.dataCadastro = LocalDateTime.now();
     }
-    public Cliente(String nome, String email, Boolean ativo) {
-    this.nome = nome;
-    this.email = email;
-    this.ativo = ativo;
-    this.dataCadastro = LocalDateTime.now();
-}
 
+    public Cliente(String nome, String email, Boolean ativo) {
+        this.nome = nome;
+        this.email = email;
+        this.ativo = ativo;
+        this.dataCadastro = LocalDateTime.now();
+    }
+
+    // 🔹 Método para inativar cliente
     public void inativar() {
         this.ativo = false;
     }
 }
-//Cliente.java dentro de entity

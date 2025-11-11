@@ -34,8 +34,8 @@ public class Produto {
     @JoinColumn(name = "restaurante_id")
     private Restaurante restaurante;
 
-    // 🔹 Construtor personalizado usado pelo DataLoader
-    public Produto(String nome, String descricao, BigDecimal preco, Boolean disponivel, String categoria, Restaurante restaurante) {
+    public Produto(String nome, String descricao, BigDecimal preco, Boolean disponivel, String categoria,
+            Restaurante restaurante) {
         this.nome = nome;
         this.descricao = descricao;
         this.preco = preco;
@@ -44,5 +44,3 @@ public class Produto {
         this.restaurante = restaurante;
     }
 }
-
-//Produto.java dentro de entity

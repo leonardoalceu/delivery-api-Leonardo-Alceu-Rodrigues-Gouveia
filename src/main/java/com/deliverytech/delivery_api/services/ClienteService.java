@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.deliverytech.delivery_api.dto.ClienteRequestDTO;
 import com.deliverytech.delivery_api.dto.ClienteResponseDTO;
-import com.deliverytech.delivery_api.dto.ClienteResquetDTO;
 import com.deliverytech.delivery_api.entity.Cliente;
 import com.deliverytech.delivery_api.exceptions.BusinessException;
 import com.deliverytech.delivery_api.repository.ClienteRepository;
@@ -25,7 +25,7 @@ public class ClienteService {
     }
 
     /** Cadastrar novo cliente */
-    public ClienteResponseDTO cadastrar(ClienteResquetDTO dto) {
+    public ClienteResponseDTO cadastrar(ClienteRequestDTO dto) {
         if (clienteRepository.existsByEmail(dto.getEmail())) {
             throw new BusinessException("Email já cadastrado: " + dto.getEmail());
         }
@@ -61,7 +61,7 @@ public class ClienteService {
     }
 
     /** Atualizar cliente */
-    public Cliente atualizar(Long id, ClienteResquetDTO dto) {
+    public Cliente atualizar(Long id, ClienteRequestDTO dto) {
         Cliente cliente = buscarPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado: " + id));
 

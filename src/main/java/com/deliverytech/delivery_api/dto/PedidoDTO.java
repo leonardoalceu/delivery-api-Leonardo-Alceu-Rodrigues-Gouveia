@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 public class PedidoDTO {
 
     private Long id;
-    private String numeroPedido;         // código do pedido
-    private LocalDateTime dataPedido;    // data do pedido
-    private String status;               // status do pedido (PENDENTE, CONFIRMADO, etc.)
-    private BigDecimal valorTotal;       // total do pedido
-    private String observacoes;          // observações opcionais
-    private Long clienteId;              // id do cliente
-    private Long restauranteId;          // id do restaurante
-    private String enderecoEntrega;      // endereço de entrega
-    private String formaPagamento;       // forma de pagamento (opcional)
+    private String numeroPedido;         
+    private LocalDateTime dataPedido;    
+    private String status;               
+    private BigDecimal valorTotal;       
+    private String observacoes;          
+    private Long clienteId;              
+    private Long restauranteId;          
+    private String enderecoEntrega;      
+    private String formaPagamento;       
 }

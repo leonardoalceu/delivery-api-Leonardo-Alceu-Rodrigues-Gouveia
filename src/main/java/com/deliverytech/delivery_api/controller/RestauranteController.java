@@ -29,7 +29,6 @@ public class RestauranteController {
         this.restauranteService = restauranteService;
     }
 
-    // POST /api/restaurantes → cadastrar
     @PostMapping
     public ResponseEntity<?> cadastrar(@Validated @RequestBody RestauranteDTO dto) {
         try {
@@ -43,13 +42,13 @@ public class RestauranteController {
         }
     }
 
-    // GET /api/restaurantes → listar apenas ativos
+    
     @GetMapping
     public ResponseEntity<List<RestauranteDTO>> listarAtivos() {
         return ResponseEntity.ok(restauranteService.listarAtivos());
     }
 
-    // GET /api/restaurantes/{id} → buscar por ID
+  
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
         try {
@@ -60,7 +59,7 @@ public class RestauranteController {
         }
     }
 
-    // PUT /api/restaurantes/{id} → atualizar
+    
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizar(@PathVariable Long id, @Validated @RequestBody RestauranteDTO dto) {
         try {
@@ -71,7 +70,7 @@ public class RestauranteController {
         }
     }
 
-    // PATCH /api/restaurantes/{id}/status → ativar/desativar
+    
     @PatchMapping("/{id}/status")
     public ResponseEntity<?> ativarOuDesativar(@PathVariable Long id) {
         try {
@@ -82,7 +81,7 @@ public class RestauranteController {
         }
     }
 
-    // GET /api/restaurantes/categoria/{categoria} → buscar por categoria
+    
     @GetMapping("/categoria/{categoria}")
     public ResponseEntity<?> buscarPorCategoria(@PathVariable String categoria) {
         try {
@@ -93,7 +92,7 @@ public class RestauranteController {
         }
     }
 
-    // GET /api/restaurantes/{id}/taxa-entrega/{cep} → calcular taxa
+    
     @GetMapping("/{id}/taxa-entrega/{cep}")
     public ResponseEntity<?> calcularTaxa(@PathVariable Long id, @PathVariable String cep) {
         try {

@@ -45,10 +45,10 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println("🚀 Iniciando carga de dados...");
+        System.out.println(" Iniciando carga de dados...");
 
         // ======================
-        // 1️⃣ Criar Clientes
+        // 1 Criar Clientes
         // ======================
         Cliente c1 = new Cliente("João Silva", "joao@email.com", "9999-1111", true);
         Cliente c2 = new Cliente("Maria Souza", "maria@email.com", "9999-2222", true);
@@ -56,14 +56,14 @@ public class DataLoader implements CommandLineRunner {
         clienteRepository.saveAll(Arrays.asList(c1, c2, c3));
 
         // ======================
-        // 2️⃣ Criar Restaurantes
+        // 2 Criar Restaurantes
         // ======================
         Restaurante r1 = new Restaurante("Restaurante A", "Italiana", BigDecimal.valueOf(10.0), true, "Rua A, 123", "123456789", 4.5);
         Restaurante r2 = new Restaurante("Restaurante B", "Japonesa", BigDecimal.valueOf(8.5), true, "Rua B, 456", "987654321", 4.8);
         restauranteRepository.saveAll(Arrays.asList(r1, r2));
 
         // ======================
-        // 3️⃣ Criar Produtos
+        // 3 Criar Produtos
         // ======================
         Produto p1 = new Produto("Pizza Margherita", "Pizza tradicional italiana", BigDecimal.valueOf(45.0), true, "Italiana", r1);
         Produto p2 = new Produto("Lasanha", "Lasanha à bolonhesa", BigDecimal.valueOf(35.0), true, "Italiana", r1);
@@ -72,10 +72,10 @@ public class DataLoader implements CommandLineRunner {
         Produto p5 = new Produto("Temaki", "Temaki de salmão", BigDecimal.valueOf(25.0), true, "Japonesa", r2);
         produtoRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 
-        // ======================
-        // 4️⃣ Criar Pedidos + Itens
-        // ======================
-        Pedido pedido1 = new Pedido(LocalDateTime.now().minusDays(1), StatusPedido.CONFIRMADO, BigDecimal.valueOf(80.0), c1, r1);
+
+       
+        // 4 Criar Pedidos + Itens
+         Pedido pedido1 = new Pedido(LocalDateTime.now().minusDays(1), StatusPedido.CONFIRMADO, BigDecimal.valueOf(80.0), c1, r1);
         Pedido pedido2 = new Pedido(LocalDateTime.now(), StatusPedido.PENDENTE, BigDecimal.valueOf(65.0), c2, r2);
         pedidoRepository.saveAll(Arrays.asList(pedido1, pedido2));
 
@@ -85,12 +85,12 @@ public class DataLoader implements CommandLineRunner {
         ItemPedido item4 = new ItemPedido(pedido2, p5, 2, p5.getPreco());
         itemPedidoRepository.saveAll(Arrays.asList(item1, item2, item3, item4));
 
-        System.out.println("✅ Dados de teste inseridos com sucesso!");
+        System.out.println(" Dados de teste inseridos com sucesso!");
 
         // ======================
-// 5️⃣ Testes de Consultas Derivadas
+// 5 Testes de Consultas Derivadas
 // ======================
-System.out.println("\n🔎 Consultas de validação:");
+System.out.println("\n Consultas de validação:");
 
 // Buscar cliente pelo e-mail
 clienteRepository.findByEmail("joao@email.com").ifPresent(cliente ->
@@ -113,9 +113,9 @@ List<Pedido> pedidosCliente1 = pedidoRepository.findByClienteIdOrderByDataPedido
 System.out.println("Pedidos do cliente " + c1.getNome() + ": " + pedidosCliente1.size());
 
 // ======================
-// 6️⃣ Consultas Customizadas
+// 6 Consultas Customizadas
 // ======================
-System.out.println("\n📊 Consultas customizadas:");
+System.out.println("\n Consultas customizadas:");
 
 // Total de vendas por restaurante
 for (Restaurante r : restauranteRepository.findAll()) {
@@ -137,6 +137,6 @@ pedidosPeriodoStatus.forEach(p ->
         System.out.println("Pedido confirmado na semana: " + p.getId())
 );
 
-System.out.println("\n🏁 Carga de dados finalizada!"); //reached end of file while parsing(errors(1): 140:1-140:55)
+System.out.println("\n Carga de dados finalizada!"); 
     }
 }

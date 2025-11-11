@@ -16,8 +16,8 @@ public class RestauranteDTO {
     private String categoria;
     private String endereco;
     private String telefone;
-    private BigDecimal taxaEntrega;  // mesmo tipo da entidade
-    private Double avaliacao;        // mesmo tipo da entidade
+    private BigDecimal taxaEntrega;  
+    private Double avaliacao;        
     private Boolean ativo;
 
 }

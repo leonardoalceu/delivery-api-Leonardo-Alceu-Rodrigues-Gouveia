@@ -34,18 +34,15 @@ public class Restaurante {
 
     private Boolean ativo;
 
-    // Campos necessários para o serviço
     private String endereco;
     private String telefone;
     private Double avaliacao;
 
-    // Relacionamento com produtos
     @OneToMany(mappedBy = "restaurante", cascade = CascadeType.ALL)
     private List<Produto> produtos;
 
-    // 🔹 Construtor personalizado usado pelo DataLoader
     public Restaurante(String nome, String categoria, BigDecimal taxaEntrega, Boolean ativo,
-                       String endereco, String telefone, Double avaliacao) {
+            String endereco, String telefone, Double avaliacao) {
         this.nome = nome;
         this.categoria = categoria;
         this.taxaEntrega = taxaEntrega;

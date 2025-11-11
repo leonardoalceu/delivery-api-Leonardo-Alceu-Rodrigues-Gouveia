@@ -19,24 +19,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.deliverytech.delivery_api.dto.ClienteRequestDTO;
 import com.deliverytech.delivery_api.dto.ClienteResponseDTO;
-import com.deliverytech.delivery_api.dto.ClienteResquetDTO;
 import com.deliverytech.delivery_api.entity.Cliente;
 import com.deliverytech.delivery_api.services.ClienteService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/clientes") // 🔹 agora todas as rotas terão o prefixo /api
+@RequestMapping("/api/clientes") 
 @CrossOrigin(origins = "*")
 public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
 
-    // 🟢 Cadastrar novo cliente
+    //  Cadastrar novo cliente
     @PostMapping
-    public ResponseEntity<?> cadastrar(@Valid @RequestBody ClienteResquetDTO cliente) {
+    public ResponseEntity<?> cadastrar(@Valid @RequestBody ClienteRequestDTO cliente) {
         try {
             ClienteResponseDTO clienteSalvo = clienteService.cadastrar(cliente);
             return ResponseEntity.status(HttpStatus.CREATED).body(clienteSalvo);
@@ -48,7 +48,7 @@ public class ClienteController {
         }
     }
 
-    // 🟢 Listar todos os clientes ativos
+    //  Listar todos os clientes ativos
     @GetMapping
     public ResponseEntity<List<ClienteResponseDTO>> listar() {
         List<Cliente> clientes = clienteService.listarAtivos();
@@ -58,7 +58,7 @@ public class ClienteController {
         return ResponseEntity.ok(clientesDTO);
     }
 
-    // 🟢 Buscar cliente por ID
+    // Buscar cliente por ID
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
         Optional<Cliente> clienteOpt = clienteService.buscarPorId(id);
@@ -67,10 +67,10 @@ public class ClienteController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // 🟢 Atualizar cliente
+    //  Atualizar cliente
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizar(@PathVariable Long id,
-                                       @Validated @RequestBody ClienteResquetDTO dto) {
+                                       @Validated @RequestBody ClienteRequestDTO dto) {
         try {
             Cliente clienteAtualizado = clienteService.atualizar(id, dto);
             return ResponseEntity.ok(new ClienteResponseDTO(clienteAtualizado));
@@ -82,7 +82,7 @@ public class ClienteController {
         }
     }
 
-    // 🟢 Inativar cliente (soft delete)
+    //  Inativar cliente 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> inativar(@PathVariable Long id) {
         try {
@@ -96,7 +96,7 @@ public class ClienteController {
         }
     }
 
-    // 🟢 Buscar clientes por nome
+    //  Buscar clientes por nome
     @GetMapping("/buscar")
     public ResponseEntity<List<ClienteResponseDTO>> buscarPorNome(@RequestParam String nome) {
         List<Cliente> clientes = clienteService.buscarPorNome(nome);
@@ -106,7 +106,7 @@ public class ClienteController {
         return ResponseEntity.ok(clientesDTO);
     }
 
-    // 🟢 Buscar cliente por email
+    //  Buscar cliente por email
     @GetMapping("/email/{email}")
     public ResponseEntity<?> buscarPorEmail(@PathVariable String email) {
         Optional<Cliente> clienteOpt = clienteService.buscarPorEmail(email);

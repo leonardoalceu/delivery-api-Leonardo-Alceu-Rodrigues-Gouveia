@@ -53,7 +53,6 @@ public class Pedido {
     @JoinColumn(name = "restaurante_id")
     private Restaurante restaurante;
 
-    // 🔹 Gera automaticamente o número do pedido antes de salvar no banco
     @PrePersist
     public void gerarNumeroPedido() {
         if (this.numeroPedido == null || this.numeroPedido.isEmpty()) {
@@ -64,15 +63,14 @@ public class Pedido {
         }
     }
 
-    // Construtor usado em algumas partes da aplicação
     public Pedido(Cliente cliente, LocalDateTime dataPedido, StatusPedido status) {
         this.cliente = cliente;
         this.dataPedido = dataPedido;
         this.status = status;
     }
 
-    // Construtor usado no DataLoader
-    public Pedido(LocalDateTime dataPedido, StatusPedido status, BigDecimal total, Cliente cliente, Restaurante restaurante) {
+    public Pedido(LocalDateTime dataPedido, StatusPedido status, BigDecimal total, Cliente cliente,
+            Restaurante restaurante) {
         this.dataPedido = dataPedido;
         this.status = status;
         this.total = total;

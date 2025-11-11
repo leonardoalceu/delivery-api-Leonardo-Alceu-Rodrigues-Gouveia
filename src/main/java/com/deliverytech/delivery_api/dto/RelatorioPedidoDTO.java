@@ -28,7 +28,7 @@ public class RelatorioPedidoDTO {
         return valorTotal;
     }
 
-    // Setters (opcional)
+    
     public void setPedidoId(Long pedidoId) {
         this.pedidoId = pedidoId;
     }

@@ -28,4 +28,3 @@ public class ClienteResponseDTO {
         this.ativo = save.getAtivo();
     }
 }
-//ja existe ClienteResponseDTO dentro da pasta DTO

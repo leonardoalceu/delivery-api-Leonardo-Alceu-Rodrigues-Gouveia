@@ -44,5 +44,3 @@ public class ItemPedido {
         this.precoUnitario = precoUnitario;
     }
 }
-
-//ItemPedido.java dentro de entity ja existe
